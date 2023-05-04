@@ -88,6 +88,8 @@ class gameState():
         self.detectLeftRectangleCollision(self.gameRect3)
         self.detectRightRectangleCollision(self.gameRect2)
         self.detectRightRectangleCollision(self.gameRect4)
+        if self.brickPos[1] > 500:
+            self.collision()
         
         
     def regenerateObstacle(self):
