@@ -15,6 +15,7 @@ class gameState():
         self.event = None
         pygame.init()
         pygame.mixer.init()
+        pygame.mixer.pre_init(44100, 16, 2, 4096)
         self.gap1, self.gap2 = self.getRandomGap()
         self.color = self.getRandomColor()
         self.obstacleTop1 = self.rectTop1-random.randint(30,90)
@@ -36,8 +37,11 @@ class gameState():
         self.gameRect7 = pygame.Rect(self.obstacleLeft3, self.obstacleTop3, 15, 15)       
         self.gameRect8 = pygame.Rect(self.obstacleLeft4, self.obstacleTop4,15, 15)
         self.gameOver = False
+        self.collisionSound = pygame.mixer.Sound('res\\sounds\\Collision.wav')
+        self.scoreSound = pygame.mixer.Sound('res\\sounds\\ScoreIncrement.wav')
         
     def collision(self):
+        pygame.mixer.Sound.play(self.collisionSound)
         self.gameOver = True
         
     def getRandomGap(self):
@@ -55,17 +59,20 @@ class gameState():
             return (160, 32, 240)
             
     def updatePositionAndScore(self):
-        self.setUpObstacles()
-        self.moveBrickOrObstacles()
-        self.regenerateObstacle()
-        self.detectCollision()
-        self.updateScore()
+        if not self.gameOver:
+            self.setUpObstacles()
+            self.moveBrickOrObstacles()
+            self.regenerateObstacle()
+            self.detectCollision()
+            self.updateScore()
         
     def updateScore(self):
         if self.brickPos[1] <= self.rectTop1 and self.current == "top1":
+            pygame.mixer.Sound.play(self.scoreSound)
             self.score += 1
             self.current = "top2"    
         if self.brickPos[1] <= self.rectTop2 and self.current == "top2":
+            pygame.mixer.Sound.play(self.scoreSound)
             self.score += 1
             self.current = "top1"
         
